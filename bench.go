@@ -30,7 +30,7 @@ type RequesterFactory interface {
 // Requester synchronously issues requests for a particular system under test.
 type Requester interface {
 	// Setup prepares the Requester for benchmarking.
-	Setup() error
+	Setup(i int) error
 
 	// Request performs a synchronous request to the system under test.
 	Request() error
@@ -82,8 +82,8 @@ func (b *Benchmark) Run() (*Summary, error) {
 	)
 
 	// Prepare connection benchmarks
-	for _, benchmark := range b.benchmarks {
-		if err := benchmark.setup(); err != nil {
+	for i, benchmark := range b.benchmarks {
+		if err := benchmark.setup(i); err != nil {
 			return nil, err
 		}
 		wg.Add(1)
@@ -178,14 +178,14 @@ func newConnectionBenchmark(requester Requester, requestRate uint64, duration ti
 }
 
 // setup prepares the benchmark for running.
-func (c *connectionBenchmark) setup() error {
+func (c *connectionBenchmark) setup(i int) error {
 	c.successHistogram.Reset()
 	c.uncorrectedSuccessHistogram.Reset()
 	c.errorHistogram.Reset()
 	c.uncorrectedErrorHistogram.Reset()
 	c.successTotal = 0
 	c.errorTotal = 0
-	return c.requester.Setup()
+	return c.requester.Setup(i)
 }
 
 // teardown cleans up any benchmark resources.

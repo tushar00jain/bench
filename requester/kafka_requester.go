@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/Shopify/sarama"
-	"github.com/tylertreat/bench"
+	"github.com/tushar00jain/bench"
 )
 
 // KafkaRequesterFactory implements RequesterFactory by creating a Requester
@@ -40,7 +40,7 @@ type kafkaRequester struct {
 }
 
 // Setup prepares the Requester for benchmarking.
-func (k *kafkaRequester) Setup() error {
+func (k *kafkaRequester) Setup(i int) error {
 	config := sarama.NewConfig()
 	producer, err := sarama.NewAsyncProducer(k.urls, config)
 	if err != nil {

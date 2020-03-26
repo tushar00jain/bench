@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/nats-io/go-nats-streaming"
-	"github.com/tylertreat/bench"
+	"github.com/nats-io/stan.go"
+	"github.com/tushar00jain/bench"
 )
 
 // NATSStreamingRequesterFactory implements RequesterFactory by creating a
@@ -45,7 +45,7 @@ type natsStreamingRequester struct {
 }
 
 // Setup prepares the Requester for benchmarking.
-func (n *natsStreamingRequester) Setup() error {
+func (n *natsStreamingRequester) Setup (i int) error {
 	conn, err := stan.Connect("test-cluster", fmt.Sprintf("%s-%d", n.clientID, time.Now().UnixNano()), stan.NatsURL(n.url))
 	if err != nil {
 		return err

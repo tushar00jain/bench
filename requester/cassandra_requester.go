@@ -2,7 +2,7 @@ package requester
 
 import (
 	"github.com/gocql/gocql"
-	"github.com/tylertreat/bench"
+	"github.com/tushar00jain/bench"
 )
 
 // CassandraRequesterFactory implements RequesterFactory by creating a
@@ -38,7 +38,7 @@ type cassandraRequester struct {
 }
 
 // Setup prepares the Requester for benchmarking.
-func (c *cassandraRequester) Setup() error {
+func (c *cassandraRequester) Setup(i int) error {
 	cluster := gocql.NewCluster(c.urls...)
 	cluster.Keyspace = c.keyspace
 	cluster.Consistency = c.consistency

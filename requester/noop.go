@@ -3,7 +3,7 @@ package requester
 import (
 	"sync"
 
-	"github.com/tylertreat/bench"
+	"github.com/tushar00jain/bench"
 )
 
 type NOOPRequesterFactory struct {
@@ -22,7 +22,7 @@ func (n *NOOPRequesterFactory) GetRequester(num uint64) bench.Requester {
 type noopRequester struct {
 }
 
-func (n *noopRequester) Setup() error {
+func (n *noopRequester) Setup(i int) error {
 	return nil
 }
 

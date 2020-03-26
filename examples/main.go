@@ -4,23 +4,24 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/tylertreat/bench"
-	"github.com/tylertreat/bench/requester"
+	"github.com/tushar00jain/bench"
+	"github.com/tushar00jain/bench/requester"
 )
 
 func main() {
-	r := &requester.NATSRequesterFactory{
-		URL:         "nats://localhost:4222",
-		PayloadSize: 500,
-		Subject:     "benchmark",
-	}
+	// r := &requester.NATSRequesterFactory{
+	// 	URL:         "nats://localhost:4222",
+	// 	PayloadSize: 500,
+	// 	Subject:     "benchmark",
+	// }
+	r := &requester.NOOPRequesterFactory{}
 
-	benchmark := bench.NewBenchmark(r, 10000, 1, 30*time.Second, 0)
+	benchmark := bench.NewBenchmark(r, 100, 1, 10*time.Second, 0)
 	summary, err := benchmark.Run()
 	if err != nil {
 		panic(err)
 	}
 
 	fmt.Println(summary)
-	summary.GenerateLatencyDistribution(nil, "nats.txt")
+	summary.GenerateLatencyDistribution(nil, "noop.txt")
 }

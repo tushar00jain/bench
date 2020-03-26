@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/nsqio/go-nsq"
-	"github.com/tylertreat/bench"
+	"github.com/tushar00jain/bench"
 )
 
 // NSQRequesterFactory implements RequesterFactory by creating a Requester
@@ -42,7 +42,7 @@ type nsqRequester struct {
 }
 
 // Setup prepares the Requester for benchmarking.
-func (n *nsqRequester) Setup() error {
+func (n *nsqRequester) Setup (i int) error {
 	config := nsq.NewConfig()
 	producer, err := nsq.NewProducer(n.url, config)
 	if err != nil {

@@ -4,8 +4,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/nats-io/go-nats"
-	"github.com/tylertreat/bench"
+	"github.com/nats-io/nats.go"
+	"github.com/tushar00jain/bench"
 )
 
 // NATSRequesterFactory implements RequesterFactory by creating a Requester
@@ -37,7 +37,7 @@ type natsRequester struct {
 }
 
 // Setup prepares the Requester for benchmarking.
-func (n *natsRequester) Setup() error {
+func (n *natsRequester) Setup (i int) error {
 	conn, err := nats.Connect(n.url)
 	if err != nil {
 		return err

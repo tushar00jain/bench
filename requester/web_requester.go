@@ -3,7 +3,7 @@ package requester
 import (
 	"net/http"
 
-	"github.com/tylertreat/bench"
+	"github.com/tushar00jain/bench"
 )
 
 // WebRequesterFactory implements RequesterFactory by creating a Requester
@@ -24,7 +24,7 @@ type webRequester struct {
 }
 
 // Setup prepares the Requester for benchmarking.
-func (w *webRequester) Setup() error { return nil }
+func (w *webRequester) Setup (i int) error { return nil }
 
 // Request performs a synchronous request to the system under test.
 func (w *webRequester) Request() error {

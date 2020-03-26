@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/streadway/amqp"
-	"github.com/tylertreat/bench"
+	"github.com/tushar00jain/bench"
 )
 
 // AMQPRequesterFactory implements RequesterFactory by creating a Requester
@@ -43,7 +43,7 @@ type amqpRequester struct {
 }
 
 // Setup prepares the Requester for benchmarking.
-func (r *amqpRequester) Setup() error {
+func (r *amqpRequester) Setup(i int) error {
 	conn, err := amqp.Dial(r.url)
 	if err != nil {
 		return err

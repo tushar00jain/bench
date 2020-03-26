@@ -4,7 +4,7 @@ import (
 	"strconv"
 
 	"github.com/garyburd/redigo/redis"
-	"github.com/tylertreat/bench"
+	"github.com/tushar00jain/bench"
 )
 
 // RedisRequesterFactory implements RequesterFactory by creating a Requester
@@ -35,7 +35,7 @@ type redisRequester struct {
 }
 
 // Setup prepares the Requester for benchmarking.
-func (r *redisRequester) Setup() error {
+func (r *redisRequester) Setup (i int) error {
 	conn, err := redis.Dial("tcp", r.url)
 	if err != nil {
 		return err
@@ -88,7 +88,7 @@ func (r *RedisPubSubRequesterFactory) GetRequester(num uint64) bench.Requester {
 }
 
 // Setup prepares the Requester for benchmarking.
-func (r *redisPubSubRequester) Setup() error {
+func (r *redisPubSubRequester) Setup (i int) error {
 	pubConn, err := redis.Dial("tcp", r.url)
 	if err != nil {
 		return err
