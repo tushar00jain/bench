@@ -1,11 +1,22 @@
 package bench
 
 import (
+	"errors"
 	"sync"
 	"time"
 
 	"github.com/codahale/hdrhistogram"
 )
+
+type NotInBatchErr struct {
+	Msg string
+}
+
+func (e *NotInBatchErr) Error() string {
+	return e.Msg
+}
+
+var notInBatchErr *NotInBatchErr
 
 func newDummyConnectionBenchmark(r Requester) *connectionBenchmark {
 	return &connectionBenchmark{
@@ -59,17 +70,21 @@ func (b *Benchmark) RunCustom(batches [][][]byte) (*Summary, error) {
 	}
 
 	// Merge results
-	result := <-results
-	if result.err != nil {
-		return nil, result.err
-	}
-	summary := result.summary
-	for i := 1; i < resultsCount; i++ {
-		result = <-results
+	var summary *Summary
+	for i := 0; i < resultsCount; i++ {
+		result := <-results
 		if result.err != nil {
+			if ok := errors.As(result.err, &notInBatchErr); ok {
+				continue
+			}
 			return nil, result.err
 		}
-		summary.merge(result.summary)
+
+		if summary == nil {
+			summary = result.summary
+		} else {
+			summary.merge(result.summary)
+		}
 	}
 	summary.Connections = b.connections
 
@@ -77,14 +92,17 @@ func (b *Benchmark) RunCustom(batches [][][]byte) (*Summary, error) {
 }
 
 func (c *connectionBenchmark) runCustom(request []byte) (time.Duration, error) {
-	var (
-		start = time.Now()
-	)
-
+	start := time.Now()
 	before := time.Now()
+
 	err := c.requester.Request()
 	latency := time.Since(before).Nanoseconds()
+
 	if err != nil {
+		if ok := errors.As(err, &notInBatchErr); ok {
+			return 0, err
+		}
+
 		if err := c.errorHistogram.RecordValue(latency); err != nil {
 			return 0, err
 		}
