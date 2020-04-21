@@ -33,7 +33,7 @@ type Requester interface {
 	Setup(i int) error
 
 	// Request performs a synchronous request to the system under test.
-	Request() error
+	Request(r []byte) error
 
 	// Teardown is called upon benchmark completion.
 	Teardown() error
@@ -173,7 +173,7 @@ func newConnectionBenchmark(requester Requester, requestRate uint64, duration ti
 		uncorrectedSuccessHistogram: hdrhistogram.New(1, maxRecordableLatencyNS, sigFigs),
 		errorHistogram:              hdrhistogram.New(1, maxRecordableLatencyNS, sigFigs),
 		uncorrectedErrorHistogram:   hdrhistogram.New(1, maxRecordableLatencyNS, sigFigs),
-		burst: int(burst),
+		burst:                       int(burst),
 	}
 }
 
@@ -226,7 +226,7 @@ func (c *connectionBenchmark) runRateLimited() (time.Duration, error) {
 		limiter.WaitN(ctx, c.burst)
 		for i := 0; i < c.burst; i++ {
 			before := time.Now()
-			err := c.requester.Request()
+			err := c.requester.Request(nil)
 			latency := time.Since(before).Nanoseconds()
 			if err != nil {
 				if err := c.errorHistogram.RecordCorrectedValue(latency, interval); err != nil {
@@ -263,7 +263,7 @@ func (c *connectionBenchmark) runFullThrottle() (time.Duration, error) {
 		}
 
 		before := time.Now()
-		err := c.requester.Request()
+		err := c.requester.Request(nil)
 		latency := time.Since(before).Nanoseconds()
 		if err != nil {
 			if err := c.errorHistogram.RecordValue(latency); err != nil {

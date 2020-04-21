@@ -122,7 +122,7 @@ func (c *connectionBenchmark) runCustom(request []byte, batchCount *BatchCount) 
 	start := time.Now()
 	before := time.Now()
 
-	err := c.requester.Request()
+	err := c.requester.Request(request)
 	latency := time.Since(before).Nanoseconds()
 
 	if err != nil {
